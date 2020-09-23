@@ -1,0 +1,31 @@
+apiVersion: apps/v1 # deployment is within this apps bucket
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1
+  selector: # tells deployment to manage all pods with label 'app': 'posts'
+    matchLabels:
+      app: posts
+  template: # config applied to pods created, labels pods created with 'app': 'posts'
+    metadata:
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: mattpodolak/posts:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv
+spec:
+  selector:
+      app: posts
+  type: ClusterIP # this is the default type if not specified
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

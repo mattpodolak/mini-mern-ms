@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  type: NodePort
+  selector: # NodePort service needs to know what pods to expose
+    app: posts
+  ports: # an array of entries signifying what ports to expose
+    - name: posts
+      protocol: TCP
+      port: 4000 # port of the node port service
+      targetPort: 4000 # service redirects to this port, application is listening on this

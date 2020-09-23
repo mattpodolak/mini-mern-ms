@@ -1,0 +1,31 @@
+apiVersion: apps/v1 # deployment is within this apps bucket
+kind: Deployment
+metadata:
+  name: event-bus-depl
+spec:
+  replicas: 1
+  selector: # tells deployment to manage all pods with label 'app': 'event-bus'
+    matchLabels:
+      app: event-bus
+  template: # config applied to pods created, labels pods created with 'app': 'event-bus'
+    metadata:
+      labels:
+        app: event-bus
+    spec:
+      containers:
+        - name: event-bus
+          image: mattpodolak/event-bus:latest # dont necessarily need latest it is implicit without any version
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+spec:
+  selector:
+      app: event-bus
+  type: ClusterIP # this is the default type if not specified
+  ports:
+    - name: event-bus
+      protocol: TCP
+      port: 4005
+      targetPort: 4005
